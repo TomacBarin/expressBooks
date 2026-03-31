@@ -1,14 +1,15 @@
-const express = require("express");
+import express from "express";
 const app = express();
 const port = 3000;
 
 // Så att Express kan läsa JSON:
 app.use(express.json());
 
-// Mockdata, dockmata:
+// Databas:
 const books = [
   { id: 1, title: "The Metamorphosis", author: "Franz Kafka" },
   { id: 2, title: "Dead Souls", author: "Nicolaj Gogol" },
+  { id: 5, title: "Den store blondino", author: "Sture Dahlström" },
 ];
 
 // Hämtar alla böcker:
@@ -18,7 +19,7 @@ app.get("/books", (req, res) => {
 
 // Hämtar specifik bok:
 app.get("/books/:id", (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id); // DET ÄR DEN HÄR som konverterar string ("3") till 3
 
   const book = books.find((b) => b.id === id);
   if (!book) {
@@ -43,9 +44,31 @@ app.post("/books", (req, res) => {
   res.status(201).json(newBook);
 });
 
+// Öva på req.params.id:
+// Route ska svara med "Hej Kalle" när routen besöks
+app.get("/hello/:name", (req, res) => {
+  const name = req.params.name;
+
+  res.send(`Hej hej ${name}, hej på dig ${name}!`);
+});
+
+//Mer req.params.id-övning:
+app.get("/hello/:name/:age", (req, res) => {
+  const name = req.params.name;
+  const age = req.params.age;
+
+  const ageNumber = parseInt(age);
+
+  if (isNaN(ageNumber)) {
+    return res.status(400).send("Åldern måste vara ett nummer!");
+  }
+
+  res.send(`Hej ${name}, du är ${ageNumber} år gammal.`);
+});
+
 // Route för startsidan
 app.get("/", (req, res) => {
-  res.send("Hej från min första Express-server!");
+  res.send("Första servertest, jorå, så att det, haom.");
 });
 
 // En extra route som exempel
@@ -53,7 +76,12 @@ app.get("/hello", (req, res) => {
   res.send("Hej världen!");
 });
 
+// Snabb test
+app.get("/mittens", (req, res) => {
+  res.send("Min katt heter Mittens. <br>Min mitt heter Kattens.");
+});
+
 app.listen(port, () => {
   console.log(`Servern körs på http://localhost:${port}`);
-  console.log("Öppna webbläsaren och testa!");
+  console.log("Öppna webbläsaren, tuta och kör!");
 });
