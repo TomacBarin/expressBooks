@@ -12,6 +12,12 @@ const books = [
   { id: 5, title: "Den store blondino", author: "Sture Dahlström" },
 ];
 
+// MIDDLEWARE, test: Logga alla anrop i terminal!
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.path}`);
+  next();
+});
+
 // Hämtar alla böcker:
 app.get("/books", (req, res) => {
   res.json(books);
@@ -42,6 +48,28 @@ app.post("/books", (req, res) => {
   books.push(newBook);
 
   res.status(201).json(newBook);
+});
+
+// RADERA bok
+app.delete("/books/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+
+  // Hittas bokens index:
+  const index = books.findIndex((b) => b.id === id);
+
+  // 404 - Om boken inte finns
+  if (index === -1) {
+    return res.status(404).json({ message: "Boken hittades inte." });
+  }
+
+  // Ta bort bok från array
+  const deleteBook = books.splice(index, 1)[0];
+
+  // Meddelande: Raderingen lyckades
+  res.json({
+    message: "Boken raderades",
+    bok: deleteBook, //Visar vilken bok som raderades.
+  });
 });
 
 // Öva på req.params.id:
