@@ -45,7 +45,7 @@ app.post("/books", (req, res) => {
 });
 
 // Öva på req.params.id:
-// Route ska svara med "Hej Kalle" när routen besöks
+// Route ska svara med "Hej Namn" när routen besöks
 app.get("/hello/:name", (req, res) => {
   const name = req.params.name;
 
